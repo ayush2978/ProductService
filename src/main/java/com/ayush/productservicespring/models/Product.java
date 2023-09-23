@@ -1,12 +1,12 @@
 package com.ayush.productservicespring.models;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class Product {
-    private String name;
+public class Product extends BaseModel {
     private double price;
     private String title;
     private Category category;

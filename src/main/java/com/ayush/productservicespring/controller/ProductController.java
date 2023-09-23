@@ -2,12 +2,23 @@ package com.ayush.productservicespring.controller;
 
 import com.ayush.productservicespring.models.Product;
 import com.ayush.productservicespring.models.ProductDTO;
+import com.ayush.productservicespring.service.ProductServiceImpl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/products")
 public class ProductController {
+    ProductServiceImpl productService;
+
+    ProductController(ProductServiceImpl productService) {
+        this.productService = productService;
+    }
 
     @GetMapping()
     public String getProducts() {
@@ -15,13 +26,19 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public String getProduct(@PathVariable("productId") String productId) {
-        return "returning product: "+productId;
+    public ResponseEntity<Product> getProduct(@PathVariable("productId") long productId) {
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("auth-token", "1341233412");
+
+        ResponseEntity<Product> response=new ResponseEntity<>(productService.getProduct(productId), headers,HttpStatus.OK);
+        return response;
     }
 
     @PostMapping()
-    public String createProduct() {
-        return "Product created";
+    public ResponseEntity<Product> createProduct(@RequestBody ProductDTO productDTO) {
+        Product product=productService.createProduct(productDTO);
+        ResponseEntity<Product> response=new ResponseEntity<>(product,HttpStatus.OK);
+        return response;
     }
 
     @PutMapping("/{productId}")
