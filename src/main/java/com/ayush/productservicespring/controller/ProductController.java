@@ -3,6 +3,7 @@ package com.ayush.productservicespring.controller;
 import com.ayush.productservicespring.models.Product;
 import com.ayush.productservicespring.models.ProductDTO;
 import com.ayush.productservicespring.service.ProductServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
@@ -10,7 +11,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/products")
 public class ProductController {
@@ -21,8 +24,9 @@ public class ProductController {
     }
 
     @GetMapping()
-    public String getProducts() {
-        return "All products";
+    public List<Product> getProducts() {
+        log.debug("Enter getProducts() method");
+        return productService.getAllProducts();
     }
 
     @GetMapping("/{productId}")
@@ -42,12 +46,15 @@ public class ProductController {
     }
 
     @PutMapping("/{productId}")
-    public String updateProduct(@PathVariable("productId") String productId) {
-        return "Product updated";
+    public ResponseEntity<String> updateProduct(@PathVariable("productId") long productId, @RequestBody ProductDTO productDTO){
+        productService.updateProduct(productId,productDTO);
+        ResponseEntity<String> response=new ResponseEntity<>("Product updated",HttpStatus.OK);
+        return response;
     }
 
     @DeleteMapping("/{productId}")
     public String deleteProduct(@PathVariable("productId") String productId) {
+        productService.deleteProduct(Long.parseLong(productId));
         return "Product deleted";
     }
 }
