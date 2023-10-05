@@ -1,4 +1,4 @@
-package com.ayush.productservicespring.models;
+package com.ayush.productservicespring.models.dtos;
 
 import lombok.Getter;
 import lombok.Setter;

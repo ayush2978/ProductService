@@ -1,13 +1,11 @@
-package com.ayush.productservicespring.models;
+package com.ayush.productservicespring.client.fakestoreclient;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
-
 @Getter
 @Setter
-public class CategoryDTO {
+public class FakeStoreCategoryDTO {
     private String name;
     private String description;
 }

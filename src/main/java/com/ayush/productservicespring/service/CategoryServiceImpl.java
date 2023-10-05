@@ -1,29 +1,29 @@
 package com.ayush.productservicespring.service;
 
+import com.ayush.productservicespring.client.fakestoreclient.FakeStoreApiClient;
+import com.ayush.productservicespring.client.fakestoreclient.ProductCategoryServiceImpl;
 import com.ayush.productservicespring.models.Category;
-import com.ayush.productservicespring.models.CategoryDTO;
-import org.apache.coyote.Response;
-import org.springframework.http.ResponseEntity;
+import com.ayush.productservicespring.models.Product;
+import com.ayush.productservicespring.client.fakestoreclient.FakeStoreCategoryDTO;
+import com.ayush.productservicespring.client.fakestoreclient.FakeStoreProductDTO;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import javax.swing.text.Caret;
 import java.util.List;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
+    ProductCategoryServiceImpl productCategoryService;
+    FakeStoreApiClient fakeStoreApiClient;
 
-    RestTemplate restTemplate=null;
-
-    CategoryServiceImpl(RestTemplate restTemplate){
-        this.restTemplate=restTemplate;
+    CategoryServiceImpl(ProductCategoryServiceImpl productCategoryService,FakeStoreApiClient fakeStoreApiClient){
+        this.productCategoryService=productCategoryService;
+        this.fakeStoreApiClient=fakeStoreApiClient;
     }
     @Override
     public List<Category> getCategories() {
-        ResponseEntity<CategoryDTO[]> categoryResponseEntity=restTemplate.getForEntity("https://fakestoreapi.com/products/categories", CategoryDTO[].class);
-        CategoryDTO[] categoryDTOS=categoryResponseEntity.getBody();
+        FakeStoreCategoryDTO[] categoryDTOS= fakeStoreApiClient.getCategories();
         List<Category> categories=null;
-        for(CategoryDTO categoryDTO:categoryDTOS){
+        for(FakeStoreCategoryDTO categoryDTO:categoryDTOS){
             Category category=new Category();
             category.setName(categoryDTO.getName());
             category.setDescription(categoryDTO.getDescription());
@@ -33,15 +33,19 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<Category> getProductsOfCategory(String categoryName) {
-        ResponseEntity<CategoryDTO[]> response=restTemplate.getForEntity("https://fakestoreapi.com/products/category/{categoryName}",CategoryDTO[].class,categoryName);
-        CategoryDTO[] categoryDTOS=response.getBody();
-        List<Category> categories=null;
-        for(CategoryDTO categoryDTO:categoryDTOS){
+    public List<Product> getProductsOfCategory(String categoryName) {
+        FakeStoreProductDTO[] fakeStoreProductDTOS= fakeStoreApiClient.getProductsOfCategory(categoryName);
+        List<Product> categories=null;
+        for(FakeStoreProductDTO categoryDTO:fakeStoreProductDTOS){
+            Product product=new Product();
+            product.setTitle(categoryDTO.getTitle());
+            product.setPrice(categoryDTO.getPrice());
+            product.setImage(categoryDTO.getImage());
+            product.setDescription(categoryDTO.getDescription());
             Category category=new Category();
-            category.setName(categoryDTO.getName());
-            category.setDescription(categoryDTO.getDescription());
-            categories.add(category);
+            category.setName(categoryDTO.getCategory());
+            product.setCategory(category);
+            categories.add(product);
         }
         return categories;
     }

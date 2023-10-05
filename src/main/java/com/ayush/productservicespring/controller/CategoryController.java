@@ -3,6 +3,7 @@ package com.ayush.productservicespring.controller;
 import com.ayush.productservicespring.models.Category;
 import com.ayush.productservicespring.models.Product;
 import com.ayush.productservicespring.service.CategoryServiceImpl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,14 +17,14 @@ public class CategoryController {
         this.categoryService=categoryService;
     }
     @GetMapping("/categories")
-    public List<Category> getCategories() {
+    public ResponseEntity<List<Category>> getCategories() {
         List<Category> categories=categoryService.getCategories();
-        return categories;
+        return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
     @GetMapping("/category/{categoryName}")
     public String getCategory(@PathVariable("categoryName") String categoryName) {
-        List<Category> productsOfACategory=categoryService.getProductsOfCategory(categoryName);
+        List<Product> productsOfACategory=categoryService.getProductsOfCategory(categoryName);
         return productsOfACategory.toString();
     }
 }
