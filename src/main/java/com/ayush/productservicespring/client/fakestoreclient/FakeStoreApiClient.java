@@ -1,6 +1,5 @@
 package com.ayush.productservicespring.client.fakestoreclient;
 
-import com.ayush.productservicespring.exceptions.NotFoundException;
 import com.ayush.productservicespring.models.Product;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -8,12 +7,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class FakeStoreApiClient {
-    ProductCategoryServiceImpl productCategoryService=null;
+    ProductCategoryServiceImpl productCategoryService;
 
     FakeStoreApiClient(ProductCategoryServiceImpl productCategoryService){
         this.productCategoryService=productCategoryService;
     }
-    public FakeStoreProductDTO getProduct(long productId) throws NotFoundException{
+    public FakeStoreProductDTO getProduct(long productId){
         ResponseEntity<FakeStoreProductDTO> productDTOResponseEntity =productCategoryService.requestForEntity(HttpMethod.GET,"https://fakestoreapi.com/products/{productId}",null ,FakeStoreProductDTO.class,productId);
         return productDTOResponseEntity.getBody();
     }
