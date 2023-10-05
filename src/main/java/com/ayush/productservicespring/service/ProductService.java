@@ -2,8 +2,6 @@ package com.ayush.productservicespring.service;
 
 import com.ayush.productservicespring.exceptions.NotFoundException;
 import com.ayush.productservicespring.models.Product;
-import com.ayush.productservicespring.models.dtos.ProductDTO;
-
 import java.util.List;
 
 public interface ProductService {

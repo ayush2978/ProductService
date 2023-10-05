@@ -1,13 +1,10 @@
 package com.ayush.productservicespring.client.fakestoreclient;
 
 import com.ayush.productservicespring.exceptions.NotFoundException;
-import com.ayush.productservicespring.models.Category;
 import com.ayush.productservicespring.models.Product;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class FakeStoreApiClient {
@@ -21,7 +18,13 @@ public class FakeStoreApiClient {
         return productDTOResponseEntity.getBody();
     }
     public FakeStoreProductDTO createProduct(Product product){
-        ResponseEntity<FakeStoreProductDTO> response=productCategoryService.requestForEntity(HttpMethod.POST,"https://fakestoreapi.com/products",product,FakeStoreProductDTO.class,null);
+        FakeStoreProductDTO fakeStoreProductDTO=new FakeStoreProductDTO();
+        fakeStoreProductDTO.setTitle(product.getTitle());
+        fakeStoreProductDTO.setPrice(product.getPrice());
+        fakeStoreProductDTO.setImage(product.getImage());
+        fakeStoreProductDTO.setDescription(product.getDescription());
+        fakeStoreProductDTO.setCategory(product.getCategory().getName());
+        ResponseEntity<FakeStoreProductDTO> response=productCategoryService.requestForEntity(HttpMethod.POST,"https://fakestoreapi.com/products",fakeStoreProductDTO,FakeStoreProductDTO.class,"");
         return response.getBody();
     }
 
@@ -56,8 +59,8 @@ public class FakeStoreApiClient {
         return productCategoryService.requestForEntity(HttpMethod.DELETE,"https://fakestoreapi.com/products/{productId}","",FakeStoreProductDTO.class,productId);
     }
 
-    public FakeStoreCategoryDTO[] getCategories(){
-        ResponseEntity<FakeStoreCategoryDTO[]> categoryResponseEntity=productCategoryService.requestForEntity(HttpMethod.GET,"https://fakestoreapi.com/products/categories","", FakeStoreCategoryDTO[].class,"");
+    public String[] getCategories(){
+        ResponseEntity<String[]> categoryResponseEntity=productCategoryService.requestForEntity(HttpMethod.GET,"https://fakestoreapi.com/products/categories","", String[].class,"");
         return categoryResponseEntity.getBody();
     }
     public FakeStoreProductDTO[] getProductsOfCategory(String categoryName){
