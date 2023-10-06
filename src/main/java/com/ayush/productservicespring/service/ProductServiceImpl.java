@@ -6,6 +6,7 @@ import com.ayush.productservicespring.exceptions.NotFoundException;
 import com.ayush.productservicespring.models.Category;
 import com.ayush.productservicespring.models.Product;
 import com.ayush.productservicespring.client.fakestoreclient.FakeStoreProductDTO;
+import com.ayush.productservicespring.repository.ProductRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -16,9 +17,12 @@ import java.util.Objects;
 public class ProductServiceImpl implements ProductService {
     ProductCategoryServiceImpl productCategoryService;
     FakeStoreApiClient fakeStoreApiClient;
-    ProductServiceImpl(ProductCategoryServiceImpl productCategoryService,FakeStoreApiClient fakeStoreApiClient){
+
+    ProductRepository productRepository;
+    ProductServiceImpl(ProductCategoryServiceImpl productCategoryService,FakeStoreApiClient fakeStoreApiClient,ProductRepository productRepository){
         this.productCategoryService=productCategoryService;
         this.fakeStoreApiClient=fakeStoreApiClient;
+        this.productRepository=productRepository;
     }
 
     private Product convertProductDTOToProduct(FakeStoreProductDTO productDTO){
@@ -40,6 +44,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product createProduct(Product product) {
+        product=productRepository.save(product);
         FakeStoreProductDTO productDTO= fakeStoreApiClient.createProduct(product);
         return convertProductDTOToProduct(productDTO);
     }
